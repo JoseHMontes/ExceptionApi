@@ -2,6 +2,7 @@ package com.example.jose.service;
 
 import com.example.jose.dto.ApiResponse;
 import com.example.jose.dto.UserResponse;
+import com.example.jose.exceptions.EmailAlreadyExistsException;
 import com.example.jose.exceptions.UserNotFound;
 import com.example.jose.mapper.UserMapper;
 import com.example.jose.model.User;
@@ -23,6 +24,12 @@ public class UserService {
 
     public ApiResponse<UserResponse> saveApiResponse(UserResponse userResponse){
         User user = userMapper.userDtoToUser(userResponse);
+        if (userRepository.existsByEmail(userResponse.getEmail())){
+            throw new EmailAlreadyExistsException(
+                    "Email already exists"
+            );
+        }
+
         User savePerson = userRepository.save(user);
         return ApiResponse.<UserResponse>builder()
                 .status(HttpStatus.CREATED)

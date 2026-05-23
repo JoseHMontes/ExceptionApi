@@ -1,5 +1,4 @@
 package com.example.jose.exceptions;
-
 import com.example.jose.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +13,18 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<String>> handleEmailAlreadyExistException(EmailAlreadyExistsException ex){
+        ApiResponse<String> apiResponse =
+                ApiResponse.<String>builder()
+                        .status(HttpStatus.BAD_REQUEST)
+                        .message("Email already exist!")
+                        .body(ex.getMessage())
+                        .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+    }
 
     @ExceptionHandler(UserNotFound.class)
     public ResponseEntity<ApiResponse<String>> handleUserNotFound(UserNotFound ex){
