@@ -60,9 +60,14 @@ public class UserService {
                 .build();
     }
 
-    public void delete (Long id){
-        userRepository.findById(id)
+    public  ApiResponse<String> delete (Long id){
+        User userSearch = userRepository.findById(id)
                 .orElseThrow(()->new UserNotFound("User not found"));
         userRepository.deleteById(id);
+        return ApiResponse.<String>builder()
+                .status(HttpStatus.OK)
+                .body("User - " + userSearch.getName() + ". Was deleted!")
+                .message("Deleted!")
+                .build();
     }
 }
